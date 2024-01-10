@@ -26,7 +26,7 @@ public class Location {
     @Column(length = 64 , nullable = false)
     private String countryName;
 
-    @Column(length = 2 , nullable = false)
+    @Column(length = 128 , nullable = false)
     private String countryCode;
 
     private boolean enabled;

@@ -1,6 +1,7 @@
 package com.skyapi.weatherapiservice.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -70,4 +71,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         });
         return new ResponseEntity<>(errorDTO,headers,status);
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorDTO> handleConstraintViolationException(HttpServletRequest request , Exception exception){
+        ErrorDTO errorDTO1 = new ErrorDTO();
+        errorDTO1.setTimestamp(new Date());
+        errorDTO1.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorDTO1.addError(exception.getMessage());
+        errorDTO1.setPath(request.getServletPath());
+
+        LOGGER.error(exception.getMessage() , exception);
+
+        return new ResponseEntity<>(errorDTO1,HttpStatus.BAD_REQUEST);
+    }
+
 }

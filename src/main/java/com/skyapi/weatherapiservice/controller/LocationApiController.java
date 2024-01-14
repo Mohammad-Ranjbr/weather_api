@@ -4,15 +4,18 @@ import com.skyapi.weatherapicommon.model.Location;
 import com.skyapi.weatherapiservice.exception.LocationNotFoundException;
 import com.skyapi.weatherapiservice.service.LocationService;
 import jakarta.validation.Valid;
+//import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/v1/locations")
 public class LocationApiController {
@@ -41,7 +44,7 @@ public class LocationApiController {
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<?> getLocation(@PathVariable("code") String code){
+    public ResponseEntity<?> getLocation(@PathVariable("code") /*@NotNull(message = "Location code must not be null")*/ String code){
         Location location = locationService.get(code);
         if(location == null){
             return ResponseEntity.notFound().build();

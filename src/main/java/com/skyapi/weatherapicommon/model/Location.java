@@ -22,26 +22,26 @@ import java.util.Objects;
 public class Location {
 
     @Id
-    @NotBlank
+    @NotBlank(message = "Location code cannot be left blank")
     @Column(length = 12 , nullable = false , unique = true)
     private String code;
 
-    @NotBlank // ina nemitonan khali bashan
+    @NotBlank(message = "City name cannot be left blank") // ina nemitonan khali bashan
     @JsonProperty("city_name")
     @Column(length = 128 , nullable = false)
     private String cityName;
 
-    @NotNull // in mitone khali bashe
+    @NotNull(message = "Region name cannot be left null") // in mitone khali bashe
     @JsonProperty("region_name")
     @Column(length = 128 , nullable = false)
     private String regionName;
 
-    @NotBlank
+    @NotBlank(message = "Country name cannot be left blank")
     @JsonProperty("country_name")
     @Column(length = 64 , nullable = false)
     private String countryName;
 
-    @NotBlank
+    @NotBlank(message = "Country code cannot be left blank")
     @JsonProperty("country_code")
     @Column(length = 128 , nullable = false)
     private String countryCode;

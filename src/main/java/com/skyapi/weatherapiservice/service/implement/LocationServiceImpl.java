@@ -17,9 +17,10 @@ public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
 
     @Autowired
-    public LocationServiceImpl(LocationRepository locationRepository){
+    public LocationServiceImpl(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
     }
+
     @Override
     public Location add(Location location) {
         return locationRepository.save(location);

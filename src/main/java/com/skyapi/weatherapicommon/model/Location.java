@@ -2,12 +2,10 @@ package com.skyapi.weatherapicommon.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -18,6 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @Table(name = "locations")
 public class Location {
 
@@ -56,6 +55,17 @@ public class Location {
 
     @JsonIgnore
     private boolean trashed;
+
+    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "location" , cascade = CascadeType.ALL) // casecade inja yani har balayi sare location biyarim sare realtime weather ham miad
+    private RealtimeWeather realtimeWeather;
+
+    public Location(String cityName, String regionName, String countryName, String countryCode) {
+        this.cityName = cityName;
+        this.regionName = regionName;
+        this.countryName = countryName;
+        this.countryCode = countryCode;
+    }
 
     @Override
     public boolean equals(Object o) {

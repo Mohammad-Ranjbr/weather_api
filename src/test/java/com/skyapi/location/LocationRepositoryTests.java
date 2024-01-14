@@ -1,6 +1,7 @@
 package com.skyapi.location;
 
 import com.skyapi.weatherapicommon.model.Location;
+import com.skyapi.weatherapicommon.model.RealtimeWeather;
 import com.skyapi.weatherapiservice.repository.LocationRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.Date;
 import java.util.List;
 
 @DataJpaTest
@@ -62,6 +64,31 @@ public class LocationRepositoryTests {
         locationRepository.trashByCode(code);
         Location location = locationRepository.findByCode(code);
         Assertions.assertThat(location).isNull();
+    }
+
+    @Test
+    public void testAddRealtimeWeatherData(){
+        String code = "NYC_USA";
+
+        Location location = locationRepository.findByCode(code);
+        RealtimeWeather realtimeWeather = location.getRealtimeWeather();
+
+        if(realtimeWeather == null){
+            realtimeWeather = new RealtimeWeather();
+            realtimeWeather.setLocation(location);
+            location.setRealtimeWeather(realtimeWeather);
+        }
+
+        realtimeWeather.setTemperature(-1);
+        realtimeWeather.setHumidity(30);
+        realtimeWeather.setPrecipitation(40);
+        realtimeWeather.setStatus("Snowy");
+        realtimeWeather.setWindSpeed(30);
+        realtimeWeather.setLastUpdate(new Date());
+
+        Location updatedLocation = locationRepository.save(location);
+        Assertions.assertThat(updatedLocation.getRealtimeWeather().getLocationCode()).isEqualTo(code);
+
     }
 
 }

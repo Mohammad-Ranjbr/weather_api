@@ -83,7 +83,7 @@ public class Location {
     public String toString() {
         return
                 cityName + ", " +
-                (regionName != null ? regionName : "") + ", " +
+                (regionName != null ? regionName+", " : "" ) + // chon mitone khali bashe "," ro mibarim too
                 countryName;
     }
 

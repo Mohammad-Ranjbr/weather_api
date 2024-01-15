@@ -8,6 +8,7 @@ import com.skyapi.weatherapiservice.exception.GeolocationException;
 import com.skyapi.weatherapiservice.exception.LocationNotFoundException;
 import com.skyapi.weatherapiservice.service.GeolocationService;
 import com.skyapi.weatherapiservice.service.RealtimeWeatherService;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
@@ -74,9 +75,12 @@ public class RealtimeWeatherApiControllerTests {
         Mockito.when(geolocationService.getLocation(Mockito.anyString())).thenReturn(location);
         Mockito.when(realtimeWeatherService.getByLocation(location)).thenReturn(realtimeWeather);
 
+        String expectedLocation = location.getCityName() + ", " +  location.getRegionName() + ", " + location.getCountryName();
+
         mockMvc.perform(MockMvcRequestBuilders.get(END_POINT_PATH))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.location", CoreMatchers.is(expectedLocation)))
                 .andDo(MockMvcResultHandlers.print());
     }
 

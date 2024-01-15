@@ -37,6 +37,7 @@ public class GeolocationServiceImpl implements GeolocationService {
             if(!ipResult.getStatus().equals("OK")){
                 throw new GeolocationException("Geolocation failed with status: " + ipResult.getStatus());
             }
+            LOGGER.info(ipResult.toString());
             return  new Location(ipResult.getCity() , ipResult.getRegion() , ipResult.getCountryLong() , ipResult.getCountryShort());
         } catch (IOException ioException){
             throw new GeolocationException("Error querying IP database" , ioException);

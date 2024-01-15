@@ -56,6 +56,7 @@ public class Location {
     @JsonIgnore
     private boolean trashed;
 
+    @JsonIgnore
     @PrimaryKeyJoinColumn
     @OneToOne(mappedBy = "location" , cascade = CascadeType.ALL) // casecade inja yani har balayi sare location biyarim sare realtime weather ham miad
     private RealtimeWeather realtimeWeather;

@@ -1,5 +1,6 @@
 package com.skyapi.weatherapicommon.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,10 +19,12 @@ public class RealtimeWeather {
     private int temperature;
     private int humidity;
     private int precipitation;
+    @JsonProperty("wind_speed")
     private int windSpeed;
 
     @Column(length = 50)
     private String status;
+    @JsonProperty("last_updated")
     private Date lastUpdate;
 
     @OneToOne
@@ -29,5 +32,9 @@ public class RealtimeWeather {
     @JoinColumn(name = "location_code")
     private Location location;
 
+    public void setLocation(Location location){
+        this.locationCode = location.getCode();
+        this.location = location;
+    }
 
 }

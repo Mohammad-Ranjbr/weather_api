@@ -7,6 +7,7 @@ import com.skyapi.weatherapiservice.exception.GeolocationException;
 import com.skyapi.weatherapiservice.service.GeolocationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,11 +15,15 @@ import java.io.IOException;
 @Service
 public class GeolocationServiceImpl implements GeolocationService {
 
+    private final IP2Location ipLocator;
     private static final Logger LOGGER = LoggerFactory.getLogger(GeolocationServiceImpl.class);
     private static final String DBPath = "Ip2LocationDB/IP2LOCATION-LITE-DB3.BIN/IP2LOCATION-LITE-DB3.BIN";
-    private final IP2Location ipLocator = new IP2Location();
 
-    public GeolocationServiceImpl(){
+    //private final IP2Location ipLocator = new IP2Location();
+
+    @Autowired
+    public GeolocationServiceImpl(IP2Location ipLocator){
+        this.ipLocator = ipLocator;
         try{
             ipLocator.Open(DBPath);
         } catch (IOException ioException){

@@ -9,7 +9,7 @@ import com.skyapi.weatherapiservice.exception.LocationNotFoundException;
 import com.skyapi.weatherapiservice.service.GeolocationService;
 import com.skyapi.weatherapiservice.service.RealtimeWeatherService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

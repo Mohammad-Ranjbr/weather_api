@@ -17,6 +17,7 @@ public class RealtimeWeatherServiceImpl implements RealtimeWeatherService {
     public RealtimeWeatherServiceImpl(RealtimeWeatherRepository realtimeWeatherRepository){
         this.realtimeWeatherRepository = realtimeWeatherRepository;
     }
+
     @Override
     public RealtimeWeather getByLocation(Location location) {
         String countryCode = location.getCountryCode();

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,6 +49,18 @@ public class RealtimeWeatherApiController {
         } catch(GeolocationException geolocationException){
             LOGGER.error(geolocationException.getMessage(),geolocationException);
             return  ResponseEntity.badRequest().build();
+        } catch (LocationNotFoundException locationNotFoundException){
+            LOGGER.error(locationNotFoundException.getMessage(),locationNotFoundException);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{locationCode}")
+    public ResponseEntity<?> getRealtimeWeatherByLocationCode(@PathVariable("locationCode") String location_code){
+        try{
+            RealtimeWeather realtimeWeather = realtimeWeatherService.getByLocationCode(location_code);
+            RealtimeWeatherDTO realtimeWeatherDTO = modelMapper.map(realtimeWeather,RealtimeWeatherDTO.class);
+            return new ResponseEntity<>(realtimeWeatherDTO,HttpStatus.OK);
         } catch (LocationNotFoundException locationNotFoundException){
             LOGGER.error(locationNotFoundException.getMessage(),locationNotFoundException);
             return ResponseEntity.notFound().build();

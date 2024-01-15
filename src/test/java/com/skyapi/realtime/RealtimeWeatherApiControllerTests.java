@@ -84,4 +84,49 @@ public class RealtimeWeatherApiControllerTests {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    public void testGetByLocationCodeShouldReturnStatus404NotFound() throws Exception{
+        String locationCode = "ABCD";
+        Mockito.when(realtimeWeatherService.getByLocationCode(locationCode)).thenThrow(LocationNotFoundException.class);
+        String requestURI = END_POINT_PATH + "/" + locationCode;
+
+        mockMvc.perform(MockMvcRequestBuilders.get(requestURI))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void testGetByLocationCodeShouldReturnStatus200OK() throws Exception{
+        String locationCode = "SFCA_USA";
+
+        Location location = new Location();
+        location.setCode("SFCA_USA");
+        location.setCityName("San Francisco");
+        location.setRegionName("California");
+        location.setCountryName("United States Of America");
+        location.setCountryCode("US");
+
+        RealtimeWeather realtimeWeather = new RealtimeWeather();
+        realtimeWeather.setTemperature(2);
+        realtimeWeather.setHumidity(32);
+        realtimeWeather.setPrecipitation(43);
+        realtimeWeather.setStatus("Snowy");
+        realtimeWeather.setWindSpeed(24);
+        realtimeWeather.setLastUpdate(new Date());
+
+        realtimeWeather.setLocation(location);
+        location.setRealtimeWeather(realtimeWeather);
+
+        Mockito.when(realtimeWeatherService.getByLocationCode(locationCode)).thenReturn(realtimeWeather);
+
+        String requestURI = END_POINT_PATH + "/" + locationCode;
+        String expectedLocation = location.getCityName() + ", " + location.getRegionName() + ", " + location.getCountryName();
+
+        mockMvc.perform(MockMvcRequestBuilders.get(requestURI))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.location",CoreMatchers.is(expectedLocation)))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }

@@ -19,12 +19,21 @@ public class RealtimeWeatherServiceImpl implements RealtimeWeatherService {
     }
 
     @Override
-    public RealtimeWeather getByLocation(Location location) {
+    public RealtimeWeather getByLocation(Location location) throws LocationNotFoundException{
         String countryCode = location.getCountryCode();
         String cityName = location.getCityName();
         RealtimeWeather realtimeWeather = realtimeWeatherRepository.findByCountryCodeAndCity(countryCode,cityName);
         if(realtimeWeather == null){
             throw new LocationNotFoundException("No location found with the given country code and city name");
+        }
+        return realtimeWeather;
+    }
+
+    @Override
+    public RealtimeWeather getByLocationCode(String locationCode) throws LocationNotFoundException{
+        RealtimeWeather realtimeWeather = realtimeWeatherRepository.findByLocationCode(locationCode);
+        if(realtimeWeather == null){
+            throw new LocationNotFoundException("No location found with the given code: " + locationCode);
         }
         return realtimeWeather;
     }

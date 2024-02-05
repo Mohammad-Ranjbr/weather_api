@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
@@ -50,6 +51,24 @@ public class HourlyWeatherRepositoryTests {
 
         Optional<HourlyWeather> result = hourlyWeatherRepository.findById(id);
         Assertions.assertThat(result).isNotPresent();
+    }
+
+    @Test
+    public void testFindByLocationCodeFound(){
+        String locationCode = "DEHLI_IN";
+        int currentHour = 10;
+        List<HourlyWeather> hourlyWeatherList = hourlyWeatherRepository.findByLocationCode(locationCode,currentHour);
+
+        Assertions.assertThat(hourlyWeatherList).isNotEmpty();
+    }
+
+    @Test
+    public void testFindByLocationCodeNotFound(){
+        String locationCode = "locationCode";
+        int currentHour = 10;
+        List<HourlyWeather> hourlyWeatherList = hourlyWeatherRepository.findByLocationCode(locationCode,currentHour);
+
+        Assertions.assertThat(hourlyWeatherList).isEmpty();
     }
 
 }

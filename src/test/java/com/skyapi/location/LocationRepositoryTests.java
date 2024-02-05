@@ -1,5 +1,6 @@
 package com.skyapi.location;
 
+import com.skyapi.weatherapicommon.model.HourlyWeather;
 import com.skyapi.weatherapicommon.model.Location;
 import com.skyapi.weatherapicommon.model.RealtimeWeather;
 import com.skyapi.weatherapiservice.repository.LocationRepository;
@@ -24,16 +25,16 @@ public class LocationRepositoryTests {
     @Test
     public void testAddSuccess(){
         Location location = new Location();
-        location.setCode("NYC_USA");
-        location.setCityName("New York City");
-        location.setRegionName("New York");
-        location.setCountryName("US");
-        location.setCountryCode("United States of America");
+        location.setCode("MBHM_IN");
+        location.setCityName("Mumbai");
+        location.setRegionName("Maharashtra");
+        location.setCountryName("IN");
+        location.setCountryCode("India");
         location.setEnabled(true);
 
         Location savedLocation = locationRepository.save(location);
         Assertions.assertThat(savedLocation).isNotNull();
-        Assertions.assertThat(savedLocation.getCode()).isEqualTo("NYC_USA");
+        Assertions.assertThat(savedLocation.getCode()).isEqualTo("MBHM_IN");
     }
 
     @Test
@@ -89,6 +90,13 @@ public class LocationRepositoryTests {
         Location updatedLocation = locationRepository.save(location);
         Assertions.assertThat(updatedLocation.getRealtimeWeather().getLocationCode()).isEqualTo(code);
 
+    }
+
+    @Test
+    public void testAddHourlyWeatherData(){
+        if(locationRepository.findById("MBHM_IN").isPresent()){
+            Location location = locationRepository.findById("MBHM_IN").get();
+        }
     }
 
 }

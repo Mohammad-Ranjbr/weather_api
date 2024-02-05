@@ -21,4 +21,7 @@ public interface LocationRepository extends JpaRepository<Location,String> {
     @Query("Update Location Set trashed = true Where code = ?1") // avalin parametr method
     void trashByCode(String code);
 
+    @Query("Select l From Location l Where l.countryCode = ?1 And l.cityName = ?2 And l.trashed = false")
+    Location findByCountryCodeAndCityName(String countryCode , String cityName);
+
 }

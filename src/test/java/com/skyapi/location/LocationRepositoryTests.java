@@ -138,4 +138,26 @@ public class LocationRepositoryTests {
         }
     }
 
+    @Test
+    public void testFindByCountyCodeAndCityManeNotFound(){
+//        String countryCode = "country"; // cityName and countryCode = not Present in DB
+//        String cityName = "city";
+//        Location location = locationRepository.findByCountryCodeAndCityName(countryCode,cityName);
+//        Assertions.assertThat(location).isNull();
+        String countryCode = "US"; // trashed = true
+        String cityName = "Los Angeles";
+        Location location = locationRepository.findByCountryCodeAndCityName(countryCode,cityName);
+        Assertions.assertThat(location).isNull();
+    }
+
+    @Test
+    public void testFindByCountyCodeAndCityManeFound(){
+        String countryCode = "Vn";
+        String cityName = "Da Nang";
+        Location location = locationRepository.findByCountryCodeAndCityName(countryCode,cityName);
+        Assertions.assertThat(location).isNotNull();
+        Assertions.assertThat(location.getCountryCode()).isEqualTo(countryCode);
+        Assertions.assertThat(location.getCityName()).isEqualTo(cityName);
+    }
+
 }

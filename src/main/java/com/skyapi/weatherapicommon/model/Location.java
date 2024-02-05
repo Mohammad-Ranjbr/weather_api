@@ -92,4 +92,9 @@ public class Location {
                 countryName;
     }
 
+    public Location code(String code){
+        this.code = code;
+        return this;
+    }
+
 }

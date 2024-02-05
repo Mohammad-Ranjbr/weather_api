@@ -61,7 +61,7 @@ public class Location {
     @OneToOne(mappedBy = "location" , cascade = CascadeType.ALL) // casecade inja yani har balayi sare location biyarim sare realtime weather ham miad
     private RealtimeWeather realtimeWeather;
 
-    @OneToMany(mappedBy = "id.location")
+    @OneToMany(mappedBy = "id.location" , cascade = CascadeType.ALL)
     private List<HourlyWeather> listHourlyWeather = new ArrayList<>();
 
     public Location(String cityName, String regionName, String countryName, String countryCode) {

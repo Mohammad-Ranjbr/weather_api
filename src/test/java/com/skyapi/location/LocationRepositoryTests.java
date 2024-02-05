@@ -96,6 +96,25 @@ public class LocationRepositoryTests {
     public void testAddHourlyWeatherData(){
         if(locationRepository.findById("MBHM_IN").isPresent()){
             Location location = locationRepository.findById("MBHM_IN").get();
+            List<HourlyWeather> hourlyWeathers = location.getListHourlyWeather();
+            HourlyWeather forecast1 = new HourlyWeather()
+                    .id(location,8)
+                    .temperature(20)
+                    .precipitation(60)
+                    .status("Cloudy");
+
+            HourlyWeather forecast2 = new HourlyWeather()
+                    .location(location)
+                    .hourOfDay(9)
+                    .temperature(21)
+                    .precipitation(58)
+                    .status("Cloudy");
+
+            hourlyWeathers.add(forecast1);
+            hourlyWeathers.add(forecast2);
+
+            Location updatedLocation = locationRepository.save(location);
+            Assertions.assertThat(updatedLocation.getListHourlyWeather()).isNotEmpty();
         }
     }
 

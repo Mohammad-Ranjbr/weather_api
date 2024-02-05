@@ -94,21 +94,41 @@ public class LocationRepositoryTests {
 
     @Test
     public void testAddHourlyWeatherData(){
-        if(locationRepository.findById("MBHM_IN").isPresent()){
-            Location location = locationRepository.findById("MBHM_IN").get();
+        if(locationRepository.findById("DEHLI_IN").isPresent()){
+//            Location location = locationRepository.findById("MBHM_IN").get();
+//            List<HourlyWeather> hourlyWeathers = location.getListHourlyWeather();
+//            HourlyWeather forecast1 = new HourlyWeather()
+//                    .id(location,8)
+//                    .temperature(20)
+//                    .precipitation(60)
+//                    .status("Cloudy");
+//
+//            HourlyWeather forecast2 = new HourlyWeather()
+//                    .location(location)
+//                    .hourOfDay(9)
+//                    .temperature(21)
+//                    .precipitation(58)
+//                    .status("Cloudy");
+//
+//            hourlyWeathers.add(forecast1);
+//            hourlyWeathers.add(forecast2);
+//
+//            Location updatedLocation = locationRepository.save(location);
+//            Assertions.assertThat(updatedLocation.getListHourlyWeather()).isNotEmpty();
+            Location location = locationRepository.findById("DEHLI_IN").get();
             List<HourlyWeather> hourlyWeathers = location.getListHourlyWeather();
             HourlyWeather forecast1 = new HourlyWeather()
-                    .id(location,8)
-                    .temperature(20)
-                    .precipitation(60)
-                    .status("Cloudy");
+                    .id(location,10)
+                    .temperature(10)
+                    .precipitation(70)
+                    .status("Snowy");
 
             HourlyWeather forecast2 = new HourlyWeather()
                     .location(location)
-                    .hourOfDay(9)
-                    .temperature(21)
-                    .precipitation(58)
-                    .status("Cloudy");
+                    .hourOfDay(11)
+                    .temperature(9)
+                    .precipitation(72)
+                    .status("Snowy");
 
             hourlyWeathers.add(forecast1);
             hourlyWeathers.add(forecast2);

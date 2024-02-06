@@ -86,6 +86,7 @@ public class HourlyWeatherApiControllerTests {
         Mockito.when(hourlyWeatherService.getByLocation(location,currentHour)).thenReturn(List.of(forecast1,forecast2));
         mockMvc.perform(MockMvcRequestBuilders.get(END_POINT_PATH).header(X_CURRENT_HOUR,String.valueOf(currentHour)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.location", CoreMatchers.is(expectedLocation)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.hourly_forecast[0].hour_of_day",CoreMatchers.is(10)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }

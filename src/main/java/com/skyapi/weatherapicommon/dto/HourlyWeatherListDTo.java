@@ -13,7 +13,7 @@ public class HourlyWeatherListDTo {
     private String location;
     private List<HourlyWeatherDTO> hourlyForecast = new ArrayList<>();
 
-    private void addWeatherHourlyDTO(HourlyWeatherDTO hourlyWeatherDTO){
+    public void addWeatherHourlyDTO(HourlyWeatherDTO hourlyWeatherDTO){
         this.hourlyForecast.add(hourlyWeatherDTO);
     }
 

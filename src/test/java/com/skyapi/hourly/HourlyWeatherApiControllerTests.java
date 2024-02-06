@@ -1,4 +1,4 @@
-package com.skyapi.hourly;
+package com.skyapi.hourly;  // Power Bi
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skyapi.weatherapicommon.dto.HourlyWeatherDTO;
@@ -176,6 +176,32 @@ public class HourlyWeatherApiControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.put(requestURI).contentType(MediaType.APPLICATION_JSON).content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]",CoreMatchers.is("Hourly forecast data cannot be empty")))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void testUpdateShouldReturn400BadRequestBecauseInvalidData() throws Exception {
+        String requestURI = END_POINT_PATH + "/DEHLI_IN";
+
+        HourlyWeatherDTO dto1 = new HourlyWeatherDTO()
+                .hourOfDay(10)
+                .temperature(133)
+                .precipitation(70)
+                .status("Cloudy");
+
+        HourlyWeatherDTO dto2 = new HourlyWeatherDTO()
+                .hourOfDay(11)
+                .temperature(15)
+                .precipitation(60)
+                .status("Cloudy");
+
+        List<HourlyWeatherDTO> dtoList = List.of(dto1,dto2);
+
+        String requestBody = objectMapper.writeValueAsString(dtoList);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(requestURI).contentType(MediaType.APPLICATION_JSON).content(requestBody))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]",CoreMatchers.containsString("Temperature must be in the range")))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print());
     }
 

@@ -226,4 +226,55 @@ public class HourlyWeatherApiControllerTests {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    public void testUpdateShouldReturn200OK() throws Exception {
+        String locationCode = "NYC_USA";
+        String requestURI = END_POINT_PATH + "/" + locationCode;
+
+        HourlyWeatherDTO dto1 = new HourlyWeatherDTO()
+                .hourOfDay(10)
+                .temperature(13)
+                .precipitation(70)
+                .status("Cloudy");
+
+        HourlyWeatherDTO dto2 = new HourlyWeatherDTO()
+                .hourOfDay(11)
+                .temperature(15)
+                .precipitation(60)
+                .status("Cloudy");
+
+        Location location = new Location();
+        location.setCode(locationCode);
+        location.setCityName("New York City");
+        location.setRegionName("New York");
+        location.setCountryName("US");
+        location.setCountryCode("United States of America");
+
+        HourlyWeather forecast1 = new HourlyWeather()
+                .location(location)
+                .hourOfDay(10)
+                .temperature(13)
+                .precipitation(70)
+                .status("Cloudy");
+
+        HourlyWeather forecast2 = new HourlyWeather()
+                .location(location)
+                .hourOfDay(11)
+                .temperature(14)
+                .precipitation(71)
+                .status("Cloudy");
+
+        List<HourlyWeatherDTO> dtoList = List.of(dto1,dto2);
+        List<HourlyWeather> hourlyWeatherList = List.of(forecast1,forecast2);
+
+        String requestBody = objectMapper.writeValueAsString(dtoList);
+
+        Mockito.when(hourlyWeatherService.updateByLocationCode(Mockito.eq(locationCode),Mockito.anyList())).thenReturn(hourlyWeatherList);
+        mockMvc.perform(MockMvcRequestBuilders.put(requestURI).contentType(MediaType.APPLICATION_JSON).content(requestBody))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.location",CoreMatchers.is(location.toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.hourly_forecast[0].hour_of_day",CoreMatchers.is(10)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }

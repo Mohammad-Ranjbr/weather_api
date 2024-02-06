@@ -51,6 +51,9 @@ public class HourlyWeatherServiceImpl implements HourlyWeatherService {
         if(location == null){
             throw new LocationNotFoundException("No location found with the given code: " + locationCode);
         }
+        for(HourlyWeather item : hourlyForecastInRequest){
+            item.getId().setLocation(location);
+        }
         return hourlyWeatherRepository.saveAll(hourlyForecastInRequest);
     }
 

@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
+
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -83,6 +83,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.error(exception.getMessage() , exception);
 
         return new ResponseEntity<>(errorDTO1,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadRequestException.class) // chon mikhaim hameye khata ha ro modierat kone
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // status ke barmigardone bara har khata
+    @ResponseBody
+    public ErrorDTO handleBadRequestException(HttpServletRequest request , Exception exception){
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setTimestamp(new Date());
+        errorDTO.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorDTO.addError(exception.getMessage());
+        errorDTO.setPath(request.getServletPath());
+
+        LOGGER.error(exception.getMessage() , exception);
+
+        return errorDTO;
     }
 
 }

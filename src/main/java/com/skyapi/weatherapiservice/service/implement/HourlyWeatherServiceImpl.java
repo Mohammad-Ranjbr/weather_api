@@ -35,4 +35,18 @@ public class HourlyWeatherServiceImpl implements HourlyWeatherService {
         return hourlyWeatherRepository.findByLocationCode(locationInDB.getCode(),currentHour);
     }
 
+    @Override
+    public List<HourlyWeather> getByLocationCode(String locationCode, int currentHour) {
+        Location locationInDB = locationRepository.findByCode(locationCode);
+        if(locationInDB == null){
+            throw new LocationNotFoundException("No location found with the given code");
+        }
+        return hourlyWeatherRepository.findByLocationCode(locationCode,currentHour);
+    }
+
+    @Override
+    public List<HourlyWeather> updateByLocationCode(String locationCode, List<HourlyWeather> hourlyForecastInRequest) {
+        return null;
+    }
+
 }

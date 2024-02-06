@@ -46,6 +46,10 @@ public class HourlyWeatherServiceImpl implements HourlyWeatherService {
 
     @Override
     public List<HourlyWeather> updateByLocationCode(String locationCode, List<HourlyWeather> hourlyForecastInRequest) {
+        Location location = locationRepository.findByCode(locationCode);
+        if(location == null){
+            throw new LocationNotFoundException("No location found with the given code: " + locationCode);
+        }
         return null;
     }
 

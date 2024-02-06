@@ -205,4 +205,25 @@ public class HourlyWeatherApiControllerTests {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    public void testUpdateShouldReturn404NotFound() throws Exception {
+        String locationCode = "DEHLI_IN";
+        String requestURI = END_POINT_PATH + "/" + locationCode;
+
+        HourlyWeatherDTO dto1 = new HourlyWeatherDTO()
+                .hourOfDay(10)
+                .temperature(13)
+                .precipitation(70)
+                .status("Cloudy");
+
+        List<HourlyWeatherDTO> dtoList = List.of(dto1);
+
+        String requestBody = objectMapper.writeValueAsString(dtoList);
+
+        Mockito.when(hourlyWeatherService.updateByLocationCode(Mockito.eq(locationCode),Mockito.anyList())).thenThrow(LocationNotFoundException.class);
+        mockMvc.perform(MockMvcRequestBuilders.put(requestURI).contentType(MediaType.APPLICATION_JSON).content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }

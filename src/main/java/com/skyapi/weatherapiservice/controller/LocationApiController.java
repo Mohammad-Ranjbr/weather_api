@@ -1,10 +1,12 @@
 package com.skyapi.weatherapiservice.controller;
 
+import com.skyapi.weatherapicommon.dto.LocationDTO;
 import com.skyapi.weatherapicommon.model.Location;
 import com.skyapi.weatherapiservice.exception.LocationNotFoundException;
 import com.skyapi.weatherapiservice.service.LocationService;
 import jakarta.validation.Valid;
 //import jakarta.validation.constraints.NotNull;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -21,17 +24,19 @@ import java.util.List;
 public class LocationApiController {
 
     private final LocationService locationService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public LocationApiController(LocationService locationService){
+    public LocationApiController(LocationService locationService , ModelMapper modelMapper){
         this.locationService = locationService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping
-    public ResponseEntity<Location> addLocation(@RequestBody  @Valid Location location){
-        Location addedLocation =locationService.add(location);
-        URI uri = URI.create("/v1/locations/" + location.getCode()); // redirect url
-        return ResponseEntity.created(uri).body(addedLocation);
+    public ResponseEntity<LocationDTO> addLocation(@RequestBody  @Valid LocationDTO dto){
+        Location addedLocation =locationService.add(dto2Entity(dto));
+        URI uri = URI.create("/v1/locations/" + addedLocation.getCode()); // redirect url
+        return ResponseEntity.created(uri).body(entity2DTO(addedLocation));
     }
 
     @GetMapping
@@ -40,7 +45,7 @@ public class LocationApiController {
         if(locations.isEmpty()){
             return ResponseEntity.noContent().build();
         }
-        return new ResponseEntity<>(locations, HttpStatus.OK);
+        return new ResponseEntity<>(listEntity2ListDTO(locations), HttpStatus.OK);
     }
 
     @GetMapping("/{code}")
@@ -49,14 +54,14 @@ public class LocationApiController {
         if(location == null){
             return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(location,HttpStatus.OK);
+        return new ResponseEntity<>(entity2DTO(location),HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateLocation(@RequestBody @Valid Location location){
+    public ResponseEntity<?> updateLocation(@RequestBody @Valid LocationDTO dto){
         try{
-            Location updatedLocation = locationService.update(location);
-            return ResponseEntity.ok(updatedLocation);
+            Location updatedLocation = locationService.update(dto2Entity(dto));
+            return ResponseEntity.ok(entity2DTO(updatedLocation));
         } catch (LocationNotFoundException locationNotFoundException){
             return ResponseEntity.notFound().build();
         }
@@ -70,6 +75,18 @@ public class LocationApiController {
         } catch (LocationNotFoundException locationNotFoundException){
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private LocationDTO entity2DTO(Location entity){
+        return modelMapper.map(entity,LocationDTO.class);
+    }
+
+    private Location dto2Entity(LocationDTO dto){
+        return modelMapper.map(dto,Location.class);
+    }
+
+    private List<LocationDTO> listEntity2ListDTO(List<Location> listEntity){
+        return listEntity.stream().map(this::entity2DTO).collect(Collectors.toList());
     }
 
 }

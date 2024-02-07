@@ -1,7 +1,6 @@
 package com.skyapi.weatherapiservice.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -100,6 +98,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setTimestamp(new Date());
         errorDTO.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorDTO.addError(exception.getMessage());
+        errorDTO.setPath(request.getServletPath());
+
+        LOGGER.error(exception.getMessage() , exception);
+
+        return errorDTO;
+    }
+
+    @ExceptionHandler(LocationNotFoundException.class) // chon mikhaim hameye khata ha ro modierat kone
+    @ResponseStatus(HttpStatus.NOT_FOUND) // status ke barmigardone bara har khata
+    @ResponseBody
+    public ErrorDTO handleLocationNotFoundException(HttpServletRequest request , Exception exception){
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setTimestamp(new Date());
+        errorDTO.setStatus(HttpStatus.NOT_FOUND.value());
         errorDTO.addError(exception.getMessage());
         errorDTO.setPath(request.getServletPath());
 

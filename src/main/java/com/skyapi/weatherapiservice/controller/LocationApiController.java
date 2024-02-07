@@ -51,30 +51,19 @@ public class LocationApiController {
     @GetMapping("/{code}")
     public ResponseEntity<?> getLocation(@PathVariable("code") /*@NotNull(message = "Location code must not be null")*/ String code){
         Location location = locationService.get(code);
-        if(location == null){
-            return ResponseEntity.notFound().build();
-        }
         return new ResponseEntity<>(entity2DTO(location),HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<?> updateLocation(@RequestBody @Valid LocationDTO dto){
-        try{
-            Location updatedLocation = locationService.update(dto2Entity(dto));
-            return ResponseEntity.ok(entity2DTO(updatedLocation));
-        } catch (LocationNotFoundException locationNotFoundException){
-            return ResponseEntity.notFound().build();
-        }
+        Location updatedLocation = locationService.update(dto2Entity(dto));
+        return ResponseEntity.ok(entity2DTO(updatedLocation));
     }
 
     @DeleteMapping("/{code}")
     public ResponseEntity<?> deleteLocation(@PathVariable("code") String code){
-        try{
-            locationService.delete(code);
-            return ResponseEntity.noContent().build();
-        } catch (LocationNotFoundException locationNotFoundException){
-            return ResponseEntity.notFound().build();
-        }
+        locationService.delete(code);
+        return ResponseEntity.noContent().build();
     }
 
     private LocationDTO entity2DTO(Location entity){

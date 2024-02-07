@@ -183,7 +183,8 @@ public class LocationApiControllerTests {
         location.setCountryCode("United States of America");
         location.setEnabled(true);
 
-        Mockito.when(locationService.update(Mockito.any())).thenThrow(new LocationNotFoundException("No location found"));
+        LocationNotFoundException ex = new LocationNotFoundException(location.getCode());
+        Mockito.when(locationService.update(Mockito.any())).thenThrow(ex);
         String bodyContent = objectMapper.writeValueAsString(location);
 
         mockMvc.perform(MockMvcRequestBuilders.put(END_POINT_PATH).contentType("application/json").content(bodyContent))
@@ -245,7 +246,8 @@ public class LocationApiControllerTests {
         String code = "LACA_USA";
         String requestURI = END_POINT_PATH + "/" + code;
 
-        Mockito.doThrow(LocationNotFoundException.class).when(locationService).delete(code); // chon az noe void hast nemishe mesl halat haye ghabl benevisim
+        LocationNotFoundException ex = new LocationNotFoundException(code);
+        Mockito.doThrow(ex).when(locationService).delete(code); // chon az noe void hast nemishe mesl halat haye ghabl benevisim
 
         mockMvc.perform(MockMvcRequestBuilders.delete(requestURI))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())

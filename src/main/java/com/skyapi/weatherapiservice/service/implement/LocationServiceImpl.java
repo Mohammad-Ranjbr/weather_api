@@ -32,16 +32,20 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Location get(String code) {
-        return locationRepository.findByCode(code);
+    public Location get(String code){
+        Location location = locationRepository.findByCode(code);
+        if(location == null){
+            throw new LocationNotFoundException(code);
+        }
+        return location;
     }
 
     @Override
-    public Location update(Location locationInRequest) throws LocationNotFoundException{
+    public Location update(Location locationInRequest){
         String code = locationInRequest.getCode();
         Location locationDB = locationRepository.findByCode(code);
         if(locationDB == null){
-            throw new LocationNotFoundException("No location found with the given code "+code);
+            throw new LocationNotFoundException(code);
         }
         locationDB.setCityName(locationInRequest.getCityName());
         locationDB.setRegionName(locationInRequest.getRegionName());
@@ -52,10 +56,10 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void delete(String code) throws LocationNotFoundException{
+    public void delete(String code){
         Location location = locationRepository.findByCode(code);
         if(location == null){
-            throw new LocationNotFoundException("No location found with the given code "+code);
+            throw new LocationNotFoundException(code);
         }
         locationRepository.trashByCode(code);
     }
